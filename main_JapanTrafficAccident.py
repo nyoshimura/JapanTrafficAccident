@@ -1,6 +1,5 @@
 '''
 Plot 2019 japan traffic accident into folium map
-TODO: Speed up plot by FastMarkerCluster
 TODO: clustering to rank dangerous road
 TODO: create ranking per selected region
 '''
@@ -22,12 +21,13 @@ folium_map = folium.Map(location=[constants_jta.Lat_init,
 # NOTE: rendering speed is greatly improved by prefer_canvas=True in folium.map
 
 # split dataframe
-df_old, df_young, df_death = df_split(df)
+#df_old, df_young, df_death = df_split(df)
+df_nodeath, df_death = df_split(df)
 
 # add layers to map
 start_time = time.time()
-addLatLong2map(df_old, '#ffa500', folium_map, 'pedestrian accident (age > 40)', 2)
-addLatLong2map(df_young, '#ff0000', folium_map, 'pedestrian accident (age <= 40)', 3)
+# yellow = '#ffa500', red = '#ff0000', black = '#000000'
+#addLatLong2map(df_nodeath, '#ff0000', folium_map, 'pedestrian accident', 2)
 addLatLong2map(df_death, '#000000', folium_map, 'pedestrian death', 3)
 print("--- %s seconds to add layers ---" % (time.time() - start_time))
 

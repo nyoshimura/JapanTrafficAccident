@@ -2,7 +2,8 @@
 helper function to plot folium map
 '''
 import folium
-import pandas as pd
+import numpy as np
+#import pandas as pd
 
 
 # convert dms(degree, minutes, seconds) to dec(decimal) for folium
@@ -15,6 +16,12 @@ def dms2dec(latlong_raw):
     return decimal_latlong
 
 
+# search closest point from points
+def closest_node(node, nodes):
+    nodes = np.asarray(nodes)
+    dist_2 = np.sum((nodes - node)**2, axis=1)
+    return np.argmin(dist_2)
+
 # add latitude, longitude to folium map
 def addLatLong2map(df_in, color_in, folium_map, legend_name, radius_size):
     lgd_txt = '<span style="color: {col};">{txt}</span>'
@@ -23,9 +30,11 @@ def addLatLong2map(df_in, color_in, folium_map, legend_name, radius_size):
     else:
         FeatureGroup_in = folium.FeatureGroup(name=lgd_txt.format(txt=legend_name, col=color_in))
 
+    nodes = []
     for index_df in range(len(df_in)):
         _latitude = dms2dec(df_in["地点　緯度（北緯）"][index_df])
         _longitude = dms2dec(df_in["地点　経度（東経）"][index_df])
+        nodes.append((_latitude, _longitude))
         if (df_in['当事者種別（当事者A）'][index_df] == 61):
             _pedestrian_age = df_in['年齢（当事者A）'][index_df]
         elif (df_in['当事者種別（当事者B）'][index_df] == 61):
@@ -46,19 +55,25 @@ def addLatLong2map(df_in, color_in, folium_map, legend_name, radius_size):
                             fill=True, fill_opacity=0.9).add_to(FeatureGroup_in)
     folium_map.add_child(FeatureGroup_in)
 
+    for node_index, node_val in enumerate(nodes):
+        nodes.pop(node_index)
+        closest_idx = closest_node(node_val, nodes)
+        nodes.insert(node_index,node_val)
+        print('node {0} index {1}: value {2}'.format(node_val, closest_idx, nodes[closest_idx]))
+
 
 def df_split(df):
     df_person = df[df["事故類型"] == 1].reset_index()
     df_nodeath = df_person[df_person['死者数'] == 0].reset_index()
     del df_nodeath['index']
-    df_young_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] < 41)]
-    df_young_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] < 41)]
-    df_young = pd.concat([df_young_A, df_young_B], axis=0).reset_index()
-    df_old_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] > 40)]
-    df_old_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] > 40)]
-    df_old = pd.concat([df_old_A, df_old_B], axis=0).reset_index()
+    #df_young_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] < 41)]
+    #df_young_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] < 41)]
+    #df_young = pd.concat([df_young_A, df_young_B], axis=0).reset_index()
+    #df_old_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] > 40)]
+    #df_old_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] > 40)]
+    #df_old = pd.concat([df_old_A, df_old_B], axis=0).reset_index()
     df_death = df_person[df_person['死者数'] > 0].reset_index()
 
-    return df_old, df_young, df_death
+    return df_nodeath, df_death
 
 # end of code
