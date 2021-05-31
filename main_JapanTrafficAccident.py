@@ -1,7 +1,8 @@
 '''
 Plot 2019 japan traffic accident into folium map
-TODO: clustering to rank dangerous road
-TODO: create ranking per selected region
+TODO: analyze death, young accident location
+TODO: add dangerous rate, reason, label (no traffic light, narrow pedestrian zone, intersection with blind spot)
+TODO: create ranking per selected region for death, young accident, overall accident
 '''
 import pandas as pd
 import folium
@@ -22,7 +23,6 @@ folium_map = folium.Map(location=[constants_jta.Lat_init,
 
 # split dataframe
 df_old, df_young, df_death = df_split(df)
-#df_nodeath, df_death = df_split(df)
 
 # add layers to map
 start_time = time.time()
