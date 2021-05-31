@@ -55,12 +55,13 @@ def addLatLong2map(df_in, color_in, folium_map, legend_name, radius_size):
                             fill=True, fill_opacity=0.9).add_to(FeatureGroup_in)
     folium_map.add_child(FeatureGroup_in)
 
+    '''
     for node_index, node_val in enumerate(nodes):
         nodes.pop(node_index)
         closest_idx = closest_node(node_val, nodes)
         nodes.insert(node_index,node_val)
-        print('node {0} index {1}: value {2}'.format(node_val, closest_idx, nodes[closest_idx]))
-
+        #print('node {0} index {1}: value {2}'.format(node_val, closest_idx, nodes[closest_idx]))
+    '''
 
 def df_split(df):
     df_person = df[df["事故類型"] == 1].reset_index()
