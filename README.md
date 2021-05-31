@@ -16,6 +16,14 @@ Output: https://nyoshimura.github.io/JapanTrafficAccident/JapanTrafficAccident.h
 * 出典:警察庁ウェブサイト(https://www.npa.go.jp/rules/index.html)
 * データ元: (https://www.npa.go.jp/publications/statistics/koutsuu/opendata/index_opendata.html)
 
+### Age code
+```
+01 = 0~24
+25 = 25~34
+35, 45, 55, 65 = x~x+9
+75 = 75~
+```
+
 ### Index
 Helper to copy index name
 ```

@@ -3,7 +3,7 @@ helper function to plot folium map
 '''
 import folium
 import numpy as np
-#import pandas as pd
+import pandas as pd
 
 
 # convert dms(degree, minutes, seconds) to dec(decimal) for folium
@@ -67,14 +67,14 @@ def df_split(df):
     df_person = df[df["事故類型"] == 1].reset_index()
     df_nodeath = df_person[df_person['死者数'] == 0].reset_index()
     del df_nodeath['index']
-    #df_young_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] < 41)]
-    #df_young_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] < 41)]
-    #df_young = pd.concat([df_young_A, df_young_B], axis=0).reset_index()
-    #df_old_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] > 40)]
-    #df_old_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] > 40)]
-    #df_old = pd.concat([df_old_A, df_old_B], axis=0).reset_index()
+    df_young_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] < 56)]
+    df_young_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] < 56)]
+    df_young = pd.concat([df_young_A, df_young_B], axis=0).reset_index()
+    df_old_A = df_nodeath[(df_nodeath['当事者種別（当事者A）'] == 61) & (df_nodeath['年齢（当事者A）'] > 56)]
+    df_old_B = df_nodeath[(df_nodeath['当事者種別（当事者B）'] == 61) & (df_nodeath['年齢（当事者B）'] > 56)]
+    df_old = pd.concat([df_old_A, df_old_B], axis=0).reset_index()
     df_death = df_person[df_person['死者数'] > 0].reset_index()
 
-    return df_nodeath, df_death
+    return df_old, df_young, df_death
 
 # end of code
